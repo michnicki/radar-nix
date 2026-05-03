@@ -4,63 +4,50 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
-    src = {
-      url = "github:skyhook-io/radar/v1.5.8";
-      flake = false;
-    };
   };
 
-  outputs = { self, nixpkgs, flake-utils, src }:
+  outputs = { self, nixpkgs, flake-utils }:
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
         version = "1.5.8";
 
-        radarFrontend = pkgs.buildNpmPackage {
-          pname = "radar-frontend";
+        srcs = {
+          x86_64-linux = {
+            url = "https://github.com/skyhook-io/radar/releases/download/v${version}/radar_v${version}_linux_amd64.tar.gz";
+            hash = "sha256-p/paN7oG+Dh9w4phoSNw2iPrj+xkd01EJQaCISw6WLo=";
+          };
+          aarch64-linux = {
+            url = "https://github.com/skyhook-io/radar/releases/download/v${version}/radar_v${version}_linux_arm64.tar.gz";
+            hash = "";
+          };
+          x86_64-darwin = {
+            url = "https://github.com/skyhook-io/radar/releases/download/v${version}/radar_v${version}_darwin_amd64.tar.gz";
+            hash = "";
+          };
+          aarch64-darwin = {
+            url = "https://github.com/skyhook-io/radar/releases/download/v${version}/radar_v${version}_darwin_arm64.tar.gz";
+            hash = "";
+          };
+        };
+
+        src = srcs.${system} or (throw "Unsupported system: ${system}");
+
+        radar = pkgs.stdenv.mkDerivation {
+          pname = "radar";
           inherit version;
-          src = src;
 
-          npmDepsHash = "sha256-LFVv+6ncntuxm9iP8zm4thogdMEmG8W1+HYwqHv7Eqw=";
-          npmDepsFetcherVersion = 2;
+          src = pkgs.fetchurl { inherit (src) url hash; };
 
-          buildPhase = ''
-            runHook preBuild
-            npm run build --workspace=web
-            runHook postBuild
+          nativeBuildInputs = [ pkgs.gnutar ];
+
+          unpackPhase = ''
+            tar -xzf $src
           '';
 
           installPhase = ''
-            runHook preInstall
-            mkdir -p $out
-            cp -r web/dist/. $out/
-            runHook postInstall
-          '';
-        };
-
-        radar = pkgs.buildGoModule {
-          pname = "radar";
-          inherit version src;
-
-          vendorHash = "sha256-teLJgCcHHpNhI2S/rvGYsLlG6fvd7llcoN98k+2+kzg=";
-
-          subPackages = [ "cmd/explorer" ];
-
-          preBuild = ''
-            mkdir -p internal/static/dist
-            cp -r ${radarFrontend}/. internal/static/dist/
-          '';
-
-          ldflags = [
-            "-s"
-            "-w"
-            "-X main.version=${version}"
-          ];
-
-          env.CGO_ENABLED = 0;
-
-          postInstall = ''
-            mv $out/bin/explorer $out/bin/radar
+            mkdir -p $out/bin
+            install -m755 kubectl-radar $out/bin/radar
           '';
 
           meta = with pkgs.lib; {
@@ -69,6 +56,7 @@
             license = licenses.asl20;
             maintainers = [ ];
             mainProgram = "radar";
+            platforms = builtins.attrNames srcs;
           };
         };
       in

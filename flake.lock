@@ -37,25 +37,7 @@
     "root": {
       "inputs": {
         "flake-utils": "flake-utils",
-        "nixpkgs": "nixpkgs",
-        "src": "src"
-      }
-    },
-    "src": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1777764079,
-        "narHash": "sha256-kUyRSCtIjj0YrPFsUBLLShECkBf1/az/X6heFHDda5E=",
-        "owner": "skyhook-io",
-        "repo": "radar",
-        "rev": "eb3f76c3ac3f0193c537209bac4f1dda9e7418a1",
-        "type": "github"
-      },
-      "original": {
-        "owner": "skyhook-io",
-        "ref": "v1.5.8",
-        "repo": "radar",
-        "type": "github"
+        "nixpkgs": "nixpkgs"
       }
     },
     "systems": {
