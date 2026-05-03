@@ -67,7 +67,16 @@ nix develop git+ssh://git@codeberg.org/tmichnicki/radar-nix.git
 
 ## Updating to a new version
 
-The build has three hashes to keep in sync. Update them in order:
+Run the update script to handle everything automatically:
+
+```bash
+./scripts/update-radar.sh          # update and push
+./scripts/update-radar.sh --dry-run  # update locally, skip push
+```
+
+The script: checks out the new tag in the local radar source, patches any missing `resolved`/`integrity` fields in `package-lock.json`, recomputes all three hashes in order, runs a final verification build, and commits.
+
+If you need to update manually, the three hashes must be kept in sync in this order:
 
 ### 1. Update the source
 
