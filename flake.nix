@@ -5,7 +5,7 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
     src = {
-      url = "path:/home/thomas/projects/nix-packages/radar";
+      url = "github:skyhook-io/radar/v1.5.8";
       flake = false;
     };
   };
@@ -14,14 +14,15 @@
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
-        version = "0.2.2";
+        version = "1.5.8";
 
         radarFrontend = pkgs.buildNpmPackage {
           pname = "radar-frontend";
           inherit version;
           src = src;
 
-          npmDepsHash = "sha256-pf+GLTX+Ezb24sW1VGTt1eePpCZP82r11cy9uWLN9dY=";
+          npmDepsHash = "sha256-LFVv+6ncntuxm9iP8zm4thogdMEmG8W1+HYwqHv7Eqw=";
+          npmDepsFetcherVersion = 2;
 
           buildPhase = ''
             runHook preBuild
