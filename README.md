@@ -9,20 +9,20 @@ Packages version **1.5.9** as a static binary (`radar`) fetched from the officia
 ### Run without installing
 
 ```bash
-nix run git+ssh://git@codeberg.org/tmichnicki/radar-nix.git -- --help
+nix run github:michnicki/radar-nix -- --help
 ```
 
 ### Build
 
 ```bash
-nix build git+ssh://git@codeberg.org/tmichnicki/radar-nix.git
+nix build github:michnicki/radar-nix
 ./result/bin/radar --kubeconfig ~/.kube/config
 ```
 
 ### Install to your profile
 
 ```bash
-nix profile install git+ssh://git@codeberg.org/tmichnicki/radar-nix.git
+nix profile install github:michnicki/radar-nix
 ```
 
 ### NixOS / nix-darwin flake
@@ -31,7 +31,7 @@ nix profile install git+ssh://git@codeberg.org/tmichnicki/radar-nix.git
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    radar-nix.url = "git+ssh://git@codeberg.org/tmichnicki/radar-nix.git";
+    radar-nix.url = "github:michnicki/radar-nix";
   };
 
   outputs = { nixpkgs, radar-nix, ... }: {
@@ -62,7 +62,7 @@ nix profile install git+ssh://git@codeberg.org/tmichnicki/radar-nix.git
 Enters a shell with Go, Node.js 20, and make — useful for local experimentation.
 
 ```bash
-nix develop git+ssh://git@codeberg.org/tmichnicki/radar-nix.git
+nix develop github:michnicki/radar-nix
 ```
 
 ## Updating to a new version
