@@ -1,8 +1,21 @@
 # radar-nix
 
-Nix flake for [radar](https://github.com/skyhook-io/radar) — a modern Kubernetes visibility tool with topology visualization, Helm management, GitOps support, and a built-in MCP server for AI integration.
+Nix flake for [radar](https://github.com/skyhook-io/radar), a modern Kubernetes visibility tool with topology visualization, Helm management, GitOps support, and an MCP server for AI integration.
 
-Packages version **1.5.9** as a static binary (`radar`) fetched from the official upstream releases.
+## Package Summary
+
+| Field | Value |
+|---|---|
+| Upstream | [skyhook-io/radar](https://github.com/skyhook-io/radar) |
+| Packaged version | `1.7.0` |
+| Main program | `radar` |
+| Supported systems | `x86_64-linux`, `aarch64-linux`, `x86_64-darwin`, `aarch64-darwin` |
+| Flake outputs | `packages.${system}.default`, `devShells.${system}.default` |
+
+## Requirements
+
+- Nix with flakes enabled.
+- A Kubernetes configuration if you want to connect radar to a cluster.
 
 ## Usage
 
@@ -19,62 +32,44 @@ nix build github:michnicki/radar-nix
 ./result/bin/radar --kubeconfig ~/.kube/config
 ```
 
-### Install to your profile
+### Install into a profile
 
 ```bash
 nix profile install github:michnicki/radar-nix
 ```
 
-### NixOS / nix-darwin flake
+### Use in a NixOS or home-manager module
+
+After adding `inputs.radar-nix.url = "github:michnicki/radar-nix";` to your flake, add the package to your module:
 
 ```nix
-{
-  inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    radar-nix.url = "github:michnicki/radar-nix";
-  };
-
-  outputs = { nixpkgs, radar-nix, ... }: {
-    nixosConfigurations.mymachine = nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
-      modules = [{
-        environment.systemPackages = [
-          radar-nix.packages.x86_64-linux.default
-        ];
-      }];
-    };
-  };
-}
-```
-
-### home-manager
-
-```nix
-{ inputs, pkgs, system, ... }: {
-  home.packages = [
-    inputs.radar-nix.packages.${system}.default
+{ inputs, pkgs, ... }: {
+  environment.systemPackages = [
+    inputs.radar-nix.packages.${pkgs.system}.default
   ];
 }
 ```
 
-## Development shell
+For home-manager, add the same package to `home.packages`.
 
-Enters a shell with Go, Node.js 20, and make — useful for local experimentation.
+## Development
+
+Enter the development shell to get Go, Node.js 20, and make:
 
 ```bash
 nix develop github:michnicki/radar-nix
 ```
 
-## Updating to a new version
+## Updating
 
-Version bumps are automated via a local script.
+Use the update helper from the repository root:
 
 ```bash
-./scripts/update-radar.sh
+./scripts/update-radar.sh [--dry-run]
 ```
 
-The script fetches the latest release tag from GitHub, prefetches hashes for all supported platforms (`x86_64-linux`, `aarch64-linux`, `x86_64-darwin`, `aarch64-darwin`), updates `flake.nix`, and commits the changes.
+The script fetches the latest upstream release, updates the version and platform hashes in `flake.nix`, verifies the build, and commits the bump. With `--dry-run`, it skips pushing.
 
 ## License
 
-Apache 2.0 — see the [upstream repository](https://github.com/skyhook-io/radar/blob/main/LICENSE).
+Radar is licensed under Apache 2.0. See the [upstream license](https://github.com/skyhook-io/radar/blob/main/LICENSE).
