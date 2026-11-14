@@ -10,24 +10,24 @@
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
-        version = "1.20.2";
+        version = "1.20.3";
 
         srcs = {
           x86_64-linux = {
             url = "https://github.com/skyhook-io/radar/releases/download/v${version}/radar_v${version}_linux_amd64.tar.gz";
-            hash = "sha256-KeR+Zv2tZqB9bjUVVz8r+8lHTFknJJGWO1t6l9gumu4=";
+            hash = "sha256-x2K4OS0eb0THuQds0v7W15BFIjXXLAA1oEdUn38QTGs=";
           };
           aarch64-linux = {
             url = "https://github.com/skyhook-io/radar/releases/download/v${version}/radar_v${version}_linux_arm64.tar.gz";
-            hash = "sha256-CCmOrTfagvRjbg/+aQ88b/i/K5enE46LyDqbLTO634s=";
+            hash = "sha256-HWU7e30cmIPOY6o5Zg9foNo55LRTLay/qm4mZCrpRhU=";
           };
           x86_64-darwin = {
             url = "https://github.com/skyhook-io/radar/releases/download/v${version}/radar_v${version}_darwin_amd64.tar.gz";
-            hash = "sha256-CdBO5uuwUU8sOg4InvMC06/mdJqBFAD0n5eZ2IioxLs=";
+            hash = "sha256-8qnqcnOeQw6zxCMI6h8TxmD7oHfWFk8NGdzWyEUPAbI=";
           };
           aarch64-darwin = {
             url = "https://github.com/skyhook-io/radar/releases/download/v${version}/radar_v${version}_darwin_arm64.tar.gz";
-            hash = "sha256-NZgK7AHwcyzm04cB6Ez1rpUDAAWEGOe+varwT0MjfPM=";
+            hash = "sha256-OgDgOPftMn1agc1qykqYkoABK7AYfgPSXHeTEHc30Ow=";
           };
         };
 
